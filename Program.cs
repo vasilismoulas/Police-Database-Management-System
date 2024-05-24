@@ -10,9 +10,6 @@ namespace PDMS
 
             CriminalRecord cr = new CriminalRecord();
 
-
-
-
         }
     }
 }
