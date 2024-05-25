@@ -1,0 +1,11 @@
+Name,Nickname,BirthDate,Severity,Description,DateOccurred,GroupAffiliation,GroupName
+John Doe,JD,1985-01-15,High,Robbery,2022-05-10,Group A,Group A
+Jane Smith,Smitty,1990-04-25,Medium,Fraud,2021-12-20,Group B,Group B
+Richard Roe,Rick,1978-07-30,High,Assault,2023-02-14,Group A,Group A
+Emily Davis,Em,1988-09-18,Low,Burglary,2020-08-22,Group B,Group B
+Michael Johnson,Mike,1983-06-05,Medium,Theft,2019-11-05,Group A,Group A
+Sarah Brown,Sara,1992-11-12,High,Drug Trafficking,2023-03-10,Group B,Group B
+Robert Black,Bob,1980-03-25,High,Arson,2021-07-11,Group A,Group A
+Jessica White,Jess,1995-02-05,Low,Shoplifting,2022-06-17,Group B,Group B
+David Green,Dave,1987-08-14,Medium,Embezzlement,2023-01-22,Group A,Group A
+Laura Blue,Laur,1982-10-30,High,Assault,2023-04-15,Group B,Group B
