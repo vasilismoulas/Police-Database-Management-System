@@ -1,7 +1,7 @@
 ﻿using PDMS;
 using System;
 
-namespace PDMS
+namespace Police_Database_Management_System
 {
 	public static class DataBaseInitialisation
 	{

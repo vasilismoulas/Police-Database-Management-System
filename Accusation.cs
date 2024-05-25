@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PDMS
+namespace Police_Database_Management_System
 {
     public enum CrimeType { Theft, Assault, Fraud, Homicide }
     public enum CrimeSeverity { Low, Medium, High }

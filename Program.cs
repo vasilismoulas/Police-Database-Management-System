@@ -8,7 +8,7 @@ namespace PDMS
         {
             PoliceCriminalDatabase PCD = new PoliceCriminalDatabase();
 
-            CriminalRecord cr = new CriminalRecord();
+      
 
         }
     }

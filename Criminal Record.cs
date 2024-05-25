@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Linq;
 
-namespace PDMS
+namespace Police_Database_Management_System
 {
     public class CriminalRecord
     {

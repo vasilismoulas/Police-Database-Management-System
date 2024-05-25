@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using PDMS;
 
-namespace PDMS
+namespace Police_Database_Management_System
 {
     public class CrimesInsider3rdPartyCompany
     {
