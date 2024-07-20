@@ -1,21 +1,27 @@
 ﻿using System;
 using System.Xml.Linq;
+using Police_Database_Management_System.CriminalDatabase;
+using Police_Database_Management_System.AuthenticationSystem;
+using System.Runtime.CompilerServices;
+using CsvHelper.Configuration.Attributes;
 
 namespace Police_Database_Management_System
 {
-    public class CriminalRecord
+    public record class CriminalRecord
     {
         // Private backing fields
         private readonly string _name;
-        private readonly string  _nickname;
+        private readonly string _nickname;
         private readonly DateTime _birthDate;
+        public Accusation AccusationDetails { get; private set; }
+        public CriminalGroup GroupAffiliation { get; private set; }
 
         //Properties
         public string Name
         {
             get
             {
-                if (IsCalledFromPoliceCriminalDatabase())
+                if (Authentication.IsCalledFromPoliceCriminalDatabase())
                     return _name;
                 else
                     throw new UnauthorisedInformationRetrievalException();
@@ -26,7 +32,7 @@ namespace Police_Database_Management_System
         {
             get
             {
-                if (IsCalledFromPoliceCriminalDatabase())
+                if (Authentication.IsCalledFromPoliceCriminalDatabase())
                     return _nickname;
                 else
                     throw new UnauthorisedInformationRetrievalException();
@@ -37,50 +43,45 @@ namespace Police_Database_Management_System
         {
             get
             {
-                if (IsCalledFromPoliceCriminalDatabase())
+                if (Authentication.IsCalledFromPoliceCriminalDatabase())
                     return _birthDate;
                 else
                     throw new UnauthorisedInformationRetrievalException();
             }
         }
 
-        public Accusation AccusationDetails { get; private set; }
-        public CriminalGroup GroupAffiliation { get; private set; }
-
 
         public CriminalRecord(string name, string nickname, DateTime birthdate, Accusation AccusationDetails, CriminalGroup GroupAffiliation)
         {
-             this._name = name;
-             this._nickname = nickname;
-             this._birthDate = birthdate;
-             this.AccusationDetails = AccusationDetails;
-             this.GroupAffiliation = GroupAffiliation;
+            this._name = name;
+            this._nickname = nickname;
+            this._birthDate = birthdate;
+            this.AccusationDetails = AccusationDetails;
+            this.GroupAffiliation = GroupAffiliation;
         }
 
         // Method to update mutable properties (only accessible by PoliceCriminalDatabase)
-        internal void UpdateAccusationDetails(Accusation newDetails)
+        public void UpdateAccusationDetails(Accusation newDetails)
         {
-            AccusationDetails = newDetails;
+            if (Authentication.IsCalledFromPoliceCriminalDatabase())
+                AccusationDetails = newDetails;
+            else
+                throw new UnauthorisedInformationRetrievalException();
         }
 
-        internal void UpdateGroupAffiliation(CriminalGroup newGroup)
+        public void UpdateGroupAffiliation(CriminalGroup newGroup)
         {
-            GroupAffiliation = newGroup;
+            if (Authentication.IsCalledFromPoliceCriminalDatabase())
+                GroupAffiliation = newGroup;
+            else
+                throw new UnauthorisedInformationRetrievalException();
         }
 
-        private bool IsCalledFromPoliceCriminalDatabase()
+        public string toString()
         {
-            var frame = new System.Diagnostics.StackFrame(2);//It skips "IsCalledFromPoliceCriminalDatabase" function plus with properties get function so we can retrieve the class that a CriminaRecords member has been called.
-            var method = frame.GetMethod();
-            return method.DeclaringType == typeof(PoliceCriminalDatabase);
+            return this._name+" "+this._nickname+" "+this._birthDate+" "+ this.AccusationDetails+" "+ this.GroupAffiliation;
         }
 
     }
 
-    public class UnauthorisedInformationRetrievalException : Exception
-    {
-        public UnauthorisedInformationRetrievalException() { }
-        public UnauthorisedInformationRetrievalException(string message) : base(message) { }
-        public UnauthorisedInformationRetrievalException(string message, Exception inner) : base(message, inner) { }
-    }
 }
