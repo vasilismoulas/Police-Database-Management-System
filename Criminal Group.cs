@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Police_Database_Management_System.CriminalDatabase;
+using Police_Database_Management_System.AuthenticationSystem;
 
 namespace Police_Database_Management_System
 {
@@ -28,7 +30,7 @@ namespace Police_Database_Management_System
 
         internal void addCriminalRecord(CriminalRecord criminal)
         {
-            if (IsCalledFromPoliceCriminalDatabase())
+            if (Authentication.IsCalledFromPoliceCriminalDatabase())
             {
                 _members.Add(criminal);
             }
@@ -40,7 +42,7 @@ namespace Police_Database_Management_System
 
         internal void removeCriminalRecord(CriminalRecord criminal)
         {
-            if (IsCalledFromPoliceCriminalDatabase())
+            if (Authentication.IsCalledFromPoliceCriminalDatabase())
             {
                 _members.Remove(criminal);
             }
@@ -50,11 +52,6 @@ namespace Police_Database_Management_System
             }
         }
 
-        private bool IsCalledFromPoliceCriminalDatabase()
-        {
-            var frame = new System.Diagnostics.StackFrame(2);//It skips "IsCalledFromPoliceCriminalDatabase" function plus with properties get function so we can retrieve the class that a CriminaRecords member has been called.
-            var method = frame.GetMethod();
-            return method.DeclaringType == typeof(PoliceCriminalDatabase);
-        }
+       
     }
 }
