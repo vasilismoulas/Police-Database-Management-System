@@ -1,51 +1,75 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Metrics;
 
-namespace Police_Database_Management_System.CriminalDatabase
+namespace PoliceDatabaseManagementSystem
 {
-    public class PoliceCriminalDatabase : ICriminalGroup, ICriminalRecord
+    internal sealed class PoliceCriminalDatabase : IPoliceCriminalDatabase
     {
-        public List<CriminalRecord> CriminalRecords { get; private set; }
-        public List<CriminalGroup> CriminalGroups { get; private set; }
+        private List<CriminalRecord> _criminalRecords;
+        private List<CriminalGroup> _criminalGroups;
 
+        // Public properties exposing the collections of criminal records and criminal groups as IEnumerable.
+        public IEnumerable<ICriminalRecord> CriminalRecords => (IEnumerable<ICriminalRecord>) _criminalRecords;
+        public IEnumerable<ICriminalGroup> CriminalGroups =>   (IEnumerable<ICriminalGroup>)  _criminalGroups;
 
         public PoliceCriminalDatabase()
         {
-
-        }
-        public PoliceCriminalDatabase(List<CriminalRecord> CriminalRecords, List<CriminalGroup> CriminalGroups)
-        {
-            this.CriminalRecords = CriminalRecords;
-            this.CriminalGroups = CriminalGroups;
+            this._criminalRecords = new List<CriminalRecord>();
+            this._criminalGroups = new List<CriminalGroup>();
         }
 
-
-        // Methods to modify records and groups
         public void AddCriminalRecord(CriminalRecord member)
         {
             if (member == null) throw new ArgumentNullException();
-            CriminalRecords.Add(member);
+            _criminalRecords.Add(member);
         }
 
         public void RemoveCriminalRecord(CriminalRecord member)
         {
-            member = CriminalRecords.Contains(member) ? member : throw new ArgumentNullException();
-            CriminalRecords.Remove(member);
+            member = _criminalRecords.Contains(member) ? member : throw new ArgumentNullException();
+            _criminalRecords.Remove(member);
         }
 
-        //public void ChangeMember(CriminalGroup group, CriminalRecord member)
-        //{
-        //    CriminalGroup selected_group = CriminalGroups.Contains(group) ? group : null;
-        //}
-
-        public ReadOnlyCollection<CriminalRecord> getCriminalRecords()
+        // Methods to modify database's criminal groups
+        public void AddCriminalGroup(CriminalGroup group)
         {
-            return new ReadOnlyCollection<CriminalRecord>(CriminalRecords);
+            if (group == null) throw new ArgumentNullException();
+            _criminalGroups.Add(group);
         }
 
-        public ReadOnlyCollection<CriminalGroup> getCriminalGroups()
+        public void RemoveCriminalGroup(CriminalGroup group)
         {
-            return new ReadOnlyCollection<CriminalGroup>(CriminalGroups);
+            if (group == null) throw new ArgumentNullException();
+            _criminalGroups.Remove(group);
+        }
+
+        public void ChangeGroupMembership(CriminalRecord record, CriminalGroup newGroup)
+        {
+  
+            foreach (var group in _criminalGroups)
+            {
+                if (group.Contains(record))
+                {
+                    group.RemoveCriminalRecord(record);
+                    break; 
+                }
+            }
+
+            newGroup.AddCriminalRecord(record);
+        }
+
+        // Method to set accusation details for a criminal record.
+        public void SetAccusationDetails(CriminalRecord record, Accusation accusationDetails)
+        {
+            record.UpdateAccusationDetails(accusationDetails);
+        }
+
+        // Method to set group affiliation for a criminal record.
+        public void SetGroupAffiliation(CriminalRecord record, CriminalGroup groupAffiliation)
+        {
+            record.UpdateGroupAffiliation(groupAffiliation);
         }
 
     }

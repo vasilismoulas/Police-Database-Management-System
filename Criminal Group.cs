@@ -1,25 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using Police_Database_Management_System.CriminalDatabase;
-using Police_Database_Management_System.AuthenticationSystem;
 
-namespace Police_Database_Management_System
+
+namespace PoliceDatabaseManagementSystem
 {
-    public class CriminalGroup
+    internal sealed class CriminalGroup : ICriminalGroup
     {
-        private readonly string _groupname;
+        private string _groupname;
         private List<CriminalRecord> _members;
 
         public string GroupName
         {
             get { return _groupname; }
-
         }
 
-        public List<CriminalRecord> Members
-        {
-            get { return _members; }
-        }
+        public IEnumerable<ICriminalRecord> Members => (IEnumerable<ICriminalRecord>)_members;
 
 
         public CriminalGroup(string groupname, List<CriminalRecord> Members)
@@ -28,30 +23,21 @@ namespace Police_Database_Management_System
             _members = Members;
         }
 
-        internal void addCriminalRecord(CriminalRecord criminal)
+        public void AddCriminalRecord(CriminalRecord criminal)
         {
-            if (Authentication.IsCalledFromPoliceCriminalDatabase())
-            {
                 _members.Add(criminal);
-            }
-            else
-            {
-                throw new UnauthorizedAccessException("Only the PoliceCriminalDatabase can modify the group members.");
-            }
         }
 
-        internal void removeCriminalRecord(CriminalRecord criminal)
+        public void RemoveCriminalRecord(CriminalRecord criminal)
         {
-            if (Authentication.IsCalledFromPoliceCriminalDatabase())
-            {
                 _members.Remove(criminal);
-            }
-            else
-            {
-                throw new UnauthorizedAccessException("Only the PoliceCriminalDatabase can modify the group members.");
-            }
         }
 
-       
+        // Method to check if the group contains a specific criminal
+        public bool Contains(CriminalRecord criminal)
+        {
+            return _members.Contains(criminal);
+        }
+
     }
 }

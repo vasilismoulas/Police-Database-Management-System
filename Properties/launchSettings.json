@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Police Database Management System": {
+      "commandName": "Project",
+      "commandLineArgs": "criminal_dataset.csv",
+      "workingDirectory": "D:\\University (UoP)\\8th semester\\Τεχνολογία Λογισμικού 2\\Εργαστήριο\\2η Εργ. Άσκηση\\Police Database Management System\\DATA"
+    }
+  }
+}

@@ -1,41 +1,78 @@
-﻿using Police_Database_Management_System;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Police_Database_Management_System.CriminalDatabase;
 
-public class CrimesInsider3rdPartyCompany
+
+namespace PoliceDatabaseManagementSystem
 {
-    private readonly ICriminalRecord _criminalRecords;
-    private readonly ICriminalGroup _criminalGroups;
 
-    public CrimesInsider3rdPartyCompany(ICriminalRecord criminalRecords, ICriminalGroup criminalGroups)
+    internal class CrimesInsider3rdPartyCompany
     {
-        _criminalRecords = criminalRecords;
-        _criminalGroups = criminalGroups;
-    }
+        // Readonly field to store the reference to the police criminal database.
+        private readonly IPoliceCriminalDatabase policeDatabase;
 
-    public CriminalRecord GetMostDangerousCriminal()
-    {
-        var records = _criminalRecords.getCriminalRecords();
-        return records.OrderByDescending(cr => cr.AccusationDetails.Severity).FirstOrDefault();
-    }
+        public CrimesInsider3rdPartyCompany(IPoliceCriminalDatabase policeDatabase)
+        {
+            this.policeDatabase = policeDatabase;
+        }
 
-    public double GetAverageAgeOfCriminals()
-    {
-        var records = _criminalRecords.getCriminalRecords();
-        if (!records.Any()) return 0.0;
+        public ICriminalRecord GetMostDangerousCriminal()
+        {
+            // Orders the criminal records by accusation severity in descending order and returns the first record.
+            return policeDatabase.CriminalRecords.OrderByDescending(c => c.AccusationDetails.Severity).FirstOrDefault();
+        }
 
-        // Calculate total age
-        double totalAge = records.Sum(cr => (DateTime.UtcNow - cr.BirthDate).TotalDays / 365.25); // Use 365.25 for leap years
+        public IEnumerable<ICriminalRecord> GetCriminalsSortedBySeverity()
+        {
+            // Orders the criminal records by accusation severity and returns the sorted collection.
+            return policeDatabase.CriminalRecords.OrderBy(c => c.AccusationDetails.Severity);
+        }
 
-        // Calculate average age
-        return totalAge / records.Count;
-    }
+        // Inside the method, average age is calculated using LINQ's Select method.
+        // It iterates over each CriminalRecord in the database.CriminalRecords collection.
+        // For each criminal record c, it calculates the difference between the current date (DateTime.Now)
+        // and the criminal's birth date(c.BirthDate) and converts it to total days using TotalDays.
+        // This gives the total age of all criminals in days.
+        // As it is difficult to figure out someone's age by saying how many days have passed since their birth (e.g. 14600 days),
+        // we convert days to years by dividing by 365.25
+        public double GetAverageAgeOfCriminals()
+        {
+            return policeDatabase.CriminalRecords.Select(c => (DateTime.Now - c.BirthDate).TotalDays / 365.25).Average();
+        }
 
-    public List<CriminalRecord> SortCriminalsBySeverity()
-    {
-        var records = _criminalRecords.getCriminalRecords();
-        return records.OrderByDescending(cr => cr.AccusationDetails.Severity).ToList();
+        public ICriminalRecord GetMostConnectedCriminal()
+        {
+            // Dictionary to store the count of connections for each criminal.
+            Dictionary<ICriminalRecord, int> connectionsCount = new Dictionary<ICriminalRecord, int>();
+
+            // Count connections for each criminal
+            foreach (var criminal in policeDatabase.CriminalRecords)
+            {
+                int connections = CountGroupConnections(criminal);
+                connectionsCount.Add(criminal, connections);
+            }
+
+            // Find criminal with maximum connections
+            var mostConnectedCriminal = connectionsCount.OrderByDescending(x => x.Value).FirstOrDefault();
+
+            return mostConnectedCriminal.Key;
+        }
+
+        // Helper method to count group connections for a specific criminal.
+        private int CountGroupConnections(ICriminalRecord criminal)
+        {
+            // Count how many groups the criminal is affiliated with
+            int connections = 0;
+            foreach (var otherCriminal in policeDatabase.CriminalRecords)
+            {
+                if (otherCriminal != criminal && otherCriminal.GroupAffiliation != null && otherCriminal.GroupAffiliation.Members.Contains(criminal))
+                {
+                    connections++;
+                }
+            }
+            return connections;
+        }
+
+
     }
 }

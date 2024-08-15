@@ -1,11 +1,9 @@
 ﻿using System;
 
-namespace Police_Database_Management_System
+namespace PoliceDatabaseManagementSystem
 {
-    public enum CrimeType { Theft, Assault, Fraud, Homicide }
-    public enum CrimeSeverity { Low, Medium, High }
 
-    public class Accusation
+    internal class Accusation : IAccusation
     {
         //backing fields
         private readonly CrimeType _typeofcrime;
