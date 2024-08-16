@@ -7,17 +7,17 @@ namespace PoliceDatabaseManagementSystem
     internal sealed class CriminalGroup : ICriminalGroup
     {
         private string _groupname;
-        private List<CriminalRecord> _members;
+        private List<ICriminalRecord> _members;
 
         public string GroupName
         {
             get { return _groupname; }
         }
 
-        public IEnumerable<ICriminalRecord> Members => (IEnumerable<ICriminalRecord>)_members;
+        public IEnumerable<ICriminalRecord> Members => _members;
 
 
-        public CriminalGroup(string groupname, List<CriminalRecord> Members)
+        public CriminalGroup(string groupname, List<ICriminalRecord> Members)
         {
             _groupname = groupname;
             _members = Members;
@@ -33,11 +33,30 @@ namespace PoliceDatabaseManagementSystem
                 _members.Remove(criminal);
         }
 
-        // Method to check if the group contains a specific criminal
         public bool Contains(CriminalRecord criminal)
         {
             return _members.Contains(criminal);
         }
 
+    }
+
+    internal class CriminalGroupEqualityComparer : IEqualityComparer<CriminalGroup>
+    {
+        public bool Equals(CriminalGroup x, CriminalGroup y)
+        {
+            if (ReferenceEquals(x, y)) return true;
+            if (x == null || y == null) return false;
+
+            // You can compare based on the GroupName or any other property that defines equality for your use case
+            return string.Equals(x.GroupName, y.GroupName, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public int GetHashCode(CriminalGroup obj)
+        {
+            if (obj == null) return 0;
+
+            // GetHashCode should match the property you're using for equality (in this case, GroupName)
+            return obj.GroupName?.GetHashCode(StringComparison.OrdinalIgnoreCase) ?? 0;
+        }
     }
 }

@@ -10,7 +10,6 @@ namespace PoliceDatabaseManagementSystem
         private List<CriminalRecord> _criminalRecords;
         private List<CriminalGroup> _criminalGroups;
 
-        // Public properties exposing the collections of criminal records and criminal groups as IEnumerable.
         public IEnumerable<ICriminalRecord> CriminalRecords => (IEnumerable<ICriminalRecord>) _criminalRecords;
         public IEnumerable<ICriminalGroup> CriminalGroups =>   (IEnumerable<ICriminalGroup>)  _criminalGroups;
 
@@ -18,6 +17,12 @@ namespace PoliceDatabaseManagementSystem
         {
             this._criminalRecords = new List<CriminalRecord>();
             this._criminalGroups = new List<CriminalGroup>();
+        }
+
+        public PoliceCriminalDatabase(List<CriminalRecord> cr, List<CriminalGroup> cg)
+        {
+            this._criminalRecords = cr;
+            this._criminalGroups  = cg;
         }
 
         public void AddCriminalRecord(CriminalRecord member)
@@ -32,7 +37,6 @@ namespace PoliceDatabaseManagementSystem
             _criminalRecords.Remove(member);
         }
 
-        // Methods to modify database's criminal groups
         public void AddCriminalGroup(CriminalGroup group)
         {
             if (group == null) throw new ArgumentNullException();
@@ -60,13 +64,11 @@ namespace PoliceDatabaseManagementSystem
             newGroup.AddCriminalRecord(record);
         }
 
-        // Method to set accusation details for a criminal record.
         public void SetAccusationDetails(CriminalRecord record, Accusation accusationDetails)
         {
             record.UpdateAccusationDetails(accusationDetails);
         }
 
-        // Method to set group affiliation for a criminal record.
         public void SetGroupAffiliation(CriminalRecord record, CriminalGroup groupAffiliation)
         {
             record.UpdateGroupAffiliation(groupAffiliation);

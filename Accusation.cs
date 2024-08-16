@@ -5,7 +5,6 @@ namespace PoliceDatabaseManagementSystem
 
     internal class Accusation : IAccusation
     {
-        //backing fields
         private readonly CrimeType _typeofcrime;
         private readonly CrimeSeverity _severity;
         private readonly string _description;

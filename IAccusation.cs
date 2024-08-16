@@ -6,7 +6,19 @@ using System.Threading.Tasks;
 
 namespace PoliceDatabaseManagementSystem
 {
-    public enum CrimeType { Theft, Assault, Fraud, Homicide, Robbery }
+    public enum CrimeType
+    {  
+        Theft,
+        Assault,
+        Fraud,
+        Homicide,
+        Burglary,
+        Robbery,
+        Arson,
+        DrugTrafficking,
+        Shoplifting,
+        Embezzlement
+    }
     public enum CrimeSeverity { Low, Medium, High }
 
     internal interface IAccusation
